@@ -9,6 +9,7 @@ WriteMakefile(
     'VERSION_FROM' => 'LogFile.pm', # finds $VERSION
     'INC'	=> Apache::src->new->inc,
     'dist'    => {
+        PREOP => 'co -l README && pod2text LogFile.pm > README && ci -u README',
 	COMPRESS=> 'gzip -9f', SUFFIX=>'gz',
 	CI => qq(ci -u -m\\"See Changes file\\"),
     },

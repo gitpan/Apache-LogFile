@@ -4,3 +4,5 @@ LogFile.xs
 MANIFEST
 Makefile.PL
 logger.pl
+README
+typemap
