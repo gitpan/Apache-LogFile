@@ -50,7 +50,7 @@
  *
  */
 
-/* $Id: LogFile.xs,v 1.2 1998/02/12 07:49:17 dougm Exp $ */
+/* $Id: LogFile.xs,v 1.1.1.1 1998/11/16 20:44:25 dougm Exp $ */
 
 #include "modules/perl/mod_perl.h"
 

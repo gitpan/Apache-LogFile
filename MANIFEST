@@ -6,3 +6,5 @@ Makefile.PL
 logger.pl
 README
 typemap
+Config/Makefile.PL
+Config/Config.pm

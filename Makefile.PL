@@ -9,8 +9,22 @@ WriteMakefile(
     'VERSION_FROM' => 'LogFile.pm', # finds $VERSION
     'INC'	=> Apache::src->new->inc,
     'dist'    => {
-        PREOP => 'co -l README && pod2text LogFile.pm > README && ci -u README',
+        PREOP => 'pod2text LogFile.pm > README',
 	COMPRESS=> 'gzip -9f', SUFFIX=>'gz',
-	CI => qq(ci -u -m\\"See Changes file\\"),
+    },
+    'macro' => {
+        CVSROOT => 'www.modperl.com:/local/cvs_repository',
     },
 );
+
+sub MY::postamble {
+
+    return <<'EOF';
+cvs_export :
+	cvs -d $(CVSROOT) export -rv$(VERSION_SYM) -d$(DISTVNAME) .
+
+cvs_rtag :
+	cvs -d $(CVSROOT) rtag v$(VERSION_SYM) Apache-LogFile
+
+EOF
+}

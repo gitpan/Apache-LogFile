@@ -4,12 +4,12 @@ use strict;
 use vars qw($VERSION @ISA);
 use Symbol ();
 use DynaLoader ();
-
 @ISA = qw(DynaLoader);
 
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 bootstrap Apache::LogFile $VERSION;
+use Apache::LogFile::Config ();
 
 my %Handles = ();
 
@@ -67,6 +67,28 @@ Apache::LogFile - Interface to Apache's logging routines
 
 =head1 SYNOPSIS
 
+  #in httpd.conf
+  PerlModule Apache::LogFile
+  PerlLogFile |perl/mylogger.pl My::Logger
+
+  #in a Perl script
+  print My::Logger "a message to the Log"
+
+=head1 DESCRIPTION
+
+The B<PerlLogFile> directive can be used to hook a Perl filehandle to a
+piped logger or to a file open for appending.  If the first character of 
+the filename is a C<|>, the file handle is opened as a pipe to the given
+program.  The file or program can be relative to the B<ServerRoot>.  
+
+The method interface was written before mod_perl directive handlers were
+introduced, but it still works so the documentation remains below:
+
+The C<new> method should be called by a server startup script or module.
+
+The last argument to C<new> is optional, it is simply a name that can be
+used to retrive the filehandle via the C<handle> method.  
+
   #in a startup file
   use Apache::LogFile ();
   Apache::LogFile->new("|perl/mylogger.pl", "MyLogger");
@@ -76,13 +98,6 @@ Apache::LogFile - Interface to Apache's logging routines
   my $fh = Apache::LogFile->handle("MyLogger");
   print $fh "a message to the log";
 
-=head1 DESCRIPTION
-
-The C<new> method should be called by a server startup script or module.
-It will create a new log file or open a pipe to a program if the first
-character of the filename is a C<|>.  
-The last argument to C<new> is optional, it is simply a name that can be
-used to retrive the filehandle via the C<handle> method.  
 If this argument is not present, the filename will be used the handle key, 
 which can also be retrived via the C<handle> method.
 The C<new> method will return a reference to the filehandle if you wish
@@ -91,8 +106,6 @@ to store it elsewhere, e.g.:
  $MyLog::Pipe = Apache::LogFile->new("|perl/mylogger.pl");
 
  $MyLog::Append = Apache::LogFile->new("logs/my_log");
-
-Filenames can be absolute or relative to B<ServerRoot>.
 
 =head1 AUTHOR
 
